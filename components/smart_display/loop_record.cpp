@@ -13,7 +13,7 @@
 #include <esp_private/freertos_debug.h>
 
 namespace esphome {
-extern TaskHandle_t loop_task_handle;  // the main loop's task, esphome/components/esp32/core.cpp
+__attribute__((weak)) TaskHandle_t loop_task_handle = nullptr;  // weak: ESPHome 2026.10+ no longer defines it  // the main loop's task, esphome/components/esp32/core.cpp
 }
 
 namespace loop_record {
