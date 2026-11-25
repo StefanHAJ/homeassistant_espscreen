@@ -40,13 +40,12 @@ bool is_code(uint32_t word) { return esp_ptr_executable(reinterpret_cast<const v
 Record taken{};
 bool had = false;
 TaskHandle_t timer_task = nullptr;  // looked up at boot: the watchdog's interrupt cannot search the tasks by name
-// The main loop's own task, taken at boot from the task that runs setup() (the main loop). ESPHome's
-// esphome::loop_task_handle is gone since 2026.4 (esphome_main_task_handle replaced it), so the record no longer
-// depends on either name.
+// The main loop's task, taken at boot from the task that runs setup(): ESPHome 2026.10 no longer defines
+// esphome::loop_task_handle (esphome/components/esp32/core.cpp), so the record depends on no name of ESPHome's.
 TaskHandle_t loop_task = nullptr;
 
 void take() {
-  loop_task = xTaskGetCurrentTaskHandle();  // called from a component's setup(): the main loop's task
+  loop_task = xTaskGetCurrentTaskHandle();  // take() runs in DashboardInbox::setup(), on the main loop's task
   timer_task = xTaskGetHandle("esp_timer");
   if (record.magic != MAGIC) return;
   taken = record;
